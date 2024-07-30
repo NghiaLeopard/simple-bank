@@ -43,8 +43,8 @@ jobs:
                   sudo mv migrate /usr/bin/migrate
                   which migrate
 
-            - name: Test
-              run: make test
-
             - name: postgres
               run: make migrateup
+
+            - name: Test
+              run: make test
