@@ -9,7 +9,12 @@ on:
     pull_request:
         branches: ["main"]
 
-    services:
+jobs:
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+
+        services:
         postgres:
             image: postgres:16
             env:
@@ -24,11 +29,6 @@ on:
                 --health-retries 5
             ports:
                 - 5432:5432
-
-jobs:
-    test:
-        name: Test
-        runs-on: ubuntu-latest
         # Step
         steps:
             - uses: actions/checkout@v4
@@ -44,9 +44,8 @@ jobs:
 
             - name: golang-migrate
               run: |
-                  $ curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-386.tar.gz | tar xvz
+                  curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-386.tar.gz | tar xvz
                   sudo mv migrate /usr/bin/migrate
-                # check have success or fail?
                   which migrate
 
             - name: postgres
