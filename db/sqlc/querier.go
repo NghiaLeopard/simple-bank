@@ -10,8 +10,8 @@ import (
 
 type Querier interface {
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
-	CreateEntry(ctx context.Context, amount int64) (Entry, error)
-	CreateTransfer(ctx context.Context, amount int64) (Transfer, error)
+	CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry, error)
+	CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error)
 	DeleteAccount(ctx context.Context, id int64) error
 	DeleteEntry(ctx context.Context, id int64) error
 	DeleteTransfer(ctx context.Context, id int64) error

@@ -1,8 +1,8 @@
 -- name: CreateEntry :one
 INSERT INTO entries (
-  amount
+  account_id,amount
 ) VALUES (
-  $1
+  $1, $2
 )
 RETURNING *;
 
