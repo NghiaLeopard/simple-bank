@@ -9,10 +9,27 @@ on:
     pull_request:
         branches: ["main"]
 
+    services:
+        postgres:
+            image: postgres:16
+            env:
+                POSTGRES_USER: root
+                POSTGRES_PASSWORD: secret
+                POSTGRES_DB: simple_bank
+                # Check run success or fail
+            options: >-
+                --health-cmd pg_isready
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
+            ports:
+                - 5432:5432
+
 jobs:
     test:
         name: Test
         runs-on: ubuntu-latest
+        # Step
         steps:
             - uses: actions/checkout@v4
 
@@ -21,5 +38,16 @@ jobs:
               with:
                   go-version: "1.22"
 
+            # Action
             - name: Test
               run: make test
+
+            - name: golang-migrate
+              run: |
+                  $ curl -L https://github.com/golang-migrate/migrate/releases/download/v4.17.1/migrate.linux-386.tar.gz | tar xvz
+                  sudo mv migrate /usr/bin/migrate
+                # check have success or fail?
+                  which migrate
+
+            - name: postgres
+              run: make migrateup
