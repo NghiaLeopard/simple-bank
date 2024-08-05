@@ -6,29 +6,35 @@ import (
 
 	"github.com/NghiaLeopard/simple-bank/api"
 	db "github.com/NghiaLeopard/simple-bank/db/sqlc"
+	"github.com/NghiaLeopard/simple-bank/utils"
 	_ "github.com/lib/pq"
 )
 
-const (
-	dbDrive = "postgres";
-	dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
-	serverAddress = "0.0.0.0:8080"
-)
 
  
 func main() {
-	conn,err := sql.Open(dbDrive,dbSource)
+	config,err := utils.LoadConfig(".")
+
+	if err != nil {
+		log.Fatal("Cannnot connect to viper",err)
+	}
+
+	conn,err := sql.Open(config.DBDrive,config.DBSource)
 
 	if err != nil {
 		log.Fatal("Cannnot connect to db",err)
 	}
 
 	store := db.NewStore(conn)
-	server := api.NewServer(store)
+	server,err := api.NewServer(config,store)
 
-	err1 := server.Start(serverAddress)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	if err1 != nil {
+	err = server.Start(config.ServerAddress)
+
+	if err != nil {
 		log.Fatal("cannot start server:",err)
 	}
 
